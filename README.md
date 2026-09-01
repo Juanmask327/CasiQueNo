@@ -1,2 +1,3 @@
 Para despliegue:
-pnpm run dev
+pnpm install
+pnpm start
