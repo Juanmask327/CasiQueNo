@@ -1,0 +1,44 @@
+{
+  "name": "casiqueno",
+  "version": "1.0.0",
+  "description": "Slot machine con probabilidad ponderada",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "build": "npx electron-builder --win",
+    "build:portable": "npx electron-builder --win portable",
+    "sim": "node sim.js"
+  },
+  "build": {
+    "appId": "com.puestas.casiqueno",
+    "productName": "CasiQueNo",
+    "copyright": "Copyright © 2026",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ]
+    },
+    "portable": {
+      "artifactName": "CasiQueNo-Portable.exe"
+    },
+    "files": [
+      "main.js",
+      "src/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "asar": true
+  },
+  "devDependencies": {
+    "electron": "^29.4.6",
+    "electron-builder": "^24.13.3"
+  }
+}

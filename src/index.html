@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CasiQueNo — Proyecto universitario de diseño de sistemas de azar" />
+  <title>CasiQueNo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body>
+
+  <!-- ── Barra de título personalizada ─────────────────────────────────── -->
+  <div class="titlebar" id="titlebar">
+    <div class="titlebar-logo">
+      <span class="logo-icon">🎰</span>
+      <span class="logo-text">CASIQUENO</span>
+    </div>
+    <div class="titlebar-controls">
+      <button class="tb-btn" id="btn-minimize" title="Minimizar">─</button>
+      <button class="tb-btn" id="btn-maximize" title="Maximizar">□</button>
+      <button class="tb-btn tb-close" id="btn-close" title="Cerrar">✕</button>
+    </div>
+  </div>
+
+  <!-- ── Fondo animado ────────────────────────────────────────────────── -->
+  <div class="bg-particles" aria-hidden="true">
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+  </div>
+
+  <!-- ── Contenedor principal ─────────────────────────────────────────── -->
+  <main class="game-container" role="main">
+
+    <!-- Panel izquierdo: balance e historial -->
+    <aside class="side-panel left-panel">
+      <section class="balance-section" aria-label="Balance del jugador">
+        <p class="panel-label">BALANCE</p>
+        <div class="balance-display">
+          <span class="balance-currency">$</span>
+          <span id="balance-value" class="balance-value">1.000</span>
+        </div>
+      </section>
+
+      <section class="history-section" aria-label="Historial de tiradas">
+        <p class="panel-label">HISTORIAL</p>
+        <div id="history-list" class="history-list" role="list"></div>
+      </section>
+
+      <button class="paytable-btn" id="paytable-btn" aria-haspopup="dialog">
+        📊 Tabla de Pagos
+      </button>
+    </aside>
+
+    <!-- Centro: máquina -->
+    <section class="machine-section" aria-label="Máquina tragamonedas">
+
+      <!-- Cabecera decorativa -->
+      <div class="machine-header" aria-hidden="true">
+        <div class="header-lights">
+          <div class="light"></div><div class="light"></div><div class="light"></div>
+          <div class="light"></div><div class="light"></div>
+        </div>
+        <h1 class="machine-title">CASI <span class="title-accent">QUE NO</span></h1>
+        <div class="header-lights">
+          <div class="light"></div><div class="light"></div><div class="light"></div>
+          <div class="light"></div><div class="light"></div>
+        </div>
+      </div>
+
+      <!-- Cuerpo de la máquina con rodillos -->
+      <div class="machine-body">
+        <div class="machine-frame">
+          <!-- Línea de pago -->
+          <div class="payline" aria-hidden="true"></div>
+
+          <!-- Rodillos -->
+          <div class="reels-container" role="group" aria-label="Rodillos">
+
+            <div class="reel" aria-label="Rodillo 1">
+              <div class="reel-window">
+                <div class="reel-strip"></div>
+              </div>
+              <div class="reel-label">I</div>
+            </div>
+
+            <div class="reel-separator" aria-hidden="true"></div>
+
+            <div class="reel" aria-label="Rodillo 2">
+              <div class="reel-window">
+                <div class="reel-strip"></div>
+              </div>
+              <div class="reel-label">II</div>
+            </div>
+
+            <div class="reel-separator" aria-hidden="true"></div>
+
+            <div class="reel" aria-label="Rodillo 3">
+              <div class="reel-window">
+                <div class="reel-strip"></div>
+              </div>
+              <div class="reel-label">III</div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Mensajes de resultado -->
+      <div class="result-area" aria-live="polite" aria-atomic="true">
+        <div id="result-message" class="result-message" role="status"></div>
+        <div id="payout-message" class="payout-message"></div>
+      </div>
+
+      <!-- Controles de apuesta y botón girar -->
+      <div class="controls-section">
+        <div class="bet-control" role="group" aria-label="Control de apuesta">
+          <button class="bet-btn" id="bet-dec" aria-label="Reducir apuesta">−</button>
+          <div class="bet-field">
+            <span class="bet-label">APUESTA</span>
+            <div class="bet-input-wrap">
+              <span class="bet-currency">$</span>
+              <input
+                type="number"
+                id="bet-input"
+                class="bet-input"
+                value="10"
+                min="1"
+                max="100"
+                step="1"
+                aria-label="Monto de apuesta"
+              />
+            </div>
+          </div>
+          <button class="bet-btn" id="bet-inc" aria-label="Aumentar apuesta">+</button>
+        </div>
+
+        <button class="spin-btn" id="spin-btn" aria-label="Girar rodillos">
+          <span class="spin-icon">▶</span> GIRAR
+        </button>
+
+        <p class="keyboard-hint" aria-label="Atajo de teclado">Presiona <kbd>Espacio</kbd> para girar</p>
+      </div>
+
+    </section>
+
+    <!-- Panel derecho: RTP y info -->
+    <aside class="side-panel right-panel">
+      <section class="rtp-section" aria-label="Información de RTP">
+        <p class="panel-label">RTP TEÓRICO</p>
+        <div class="rtp-display">94.36%</div>
+        <p class="rtp-sub">House edge: 5.64%</p>
+      </section>
+
+      <section class="prizes-section" aria-label="Premios rápidos">
+        <p class="panel-label">PREMIOS</p>
+        <div class="prize-list">
+          <div class="prize-item">
+            <span>🍒🍒🍒</span>
+            <span class="prize-mult">×5</span>
+          </div>
+          <div class="prize-item">
+            <span>🍋🍋🍋</span>
+            <span class="prize-mult">×7</span>
+          </div>
+          <div class="prize-item">
+            <span>🔔🔔🔔</span>
+            <span class="prize-mult">×12</span>
+          </div>
+          <div class="prize-item">
+            <span>⭐⭐⭐</span>
+            <span class="prize-mult">×25</span>
+          </div>
+          <div class="prize-item">
+            <span>💎💎💎</span>
+            <span class="prize-mult">×60</span>
+          </div>
+          <div class="prize-item highlight">
+            <span>7️⃣7️⃣7️⃣</span>
+            <span class="prize-mult jackpot">×120</span>
+          </div>
+          <div class="prize-divider"></div>
+          <div class="prize-item">
+            <span>Cualquier Par</span>
+            <span class="prize-mult">Varía</span>
+          </div>
+        </div>
+      </section>
+    </aside>
+
+  </main>
+
+  <!-- ── Overlay de victoria grande ──────────────────────────────────── -->
+  <div class="win-overlay" id="win-overlay" role="alert" aria-live="assertive">
+    <div class="win-overlay-content">
+      <div class="win-confetti" aria-hidden="true">🎉</div>
+      <h2 class="win-title">¡¡¡ JACKPOT !!!</h2>
+      <p class="win-amount">+$0</p>
+      <p class="win-sub">¡Felicitaciones!</p>
+    </div>
+  </div>
+
+  <!-- ── Pantalla de Game Over ────────────────────────────────────────── -->
+  <div class="game-over-screen" id="game-over" role="alertdialog" aria-modal="true" aria-label="Sin balance">
+    <div class="game-over-content">
+      <div class="game-over-icon">💸</div>
+      <h2 class="game-over-title">Sin Balance</h2>
+      <p class="game-over-sub">Te has quedado sin fondos</p>
+      <button class="restart-btn" id="restart-btn">
+        🔄 Empezar de Nuevo ($1.000)
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Modal Tabla de Pagos ─────────────────────────────────────────── -->
+  <div class="modal-overlay" id="paytable-modal" role="dialog" aria-modal="true" aria-label="Tabla de pagos">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">📊 Tabla de Pagos</h2>
+        <button class="modal-close" id="close-modal" aria-label="Cerrar tabla de pagos">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="rtp-info-box">
+          <strong>RTP Teórico: 94.36%</strong> · House edge: 5.64%
+          <br/>
+          <small>Los pesos no son uniformes. Cada símbolo tiene una probabilidad distinta.</small>
+        </div>
+
+        <table class="paytable" aria-label="Probabilidades y pagos por símbolo">
+          <thead>
+            <tr>
+              <th>Símbolo</th>
+              <th>Prob. individual</th>
+              <th>Trío (×apuesta)</th>
+              <th>Par (×apuesta)</th>
+              <th>Prob. trío</th>
+            </tr>
+          </thead>
+          <tbody id="paytable-body"></tbody>
+        </table>
+
+        <div class="modal-rules">
+          <h3>Reglas de resolución</h3>
+          <ul>
+            <li>🎯 <strong>3 iguales</strong> → paga <em>payTriple × apuesta</em></li>
+            <li>✨ <strong>Par (2 iguales de cualquier símbolo)</strong> → paga <em>payPair × apuesta</em></li>
+            <li>❌ Cualquier otro resultado → sin premio</li>
+          </ul>
+          <p class="modal-rtp-calc">
+            <strong>Cálculo del RTP:</strong> Σ P(resultado) × pago = ~0.9436 por apuesta unitaria.<br/>
+            Verificable con <code>runSimulation(1_000_000)</code> en consola (npm run sim).
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Scripts ──────────────────────────────────────────────────────── -->
+  <!-- Orden de carga importante: paytable → engine → animations → renderer -->
+  <script src="scripts/paytable.js"></script>
+  <script src="scripts/engine.js"></script>
+  <script src="scripts/animations.js"></script>
+  <script src="scripts/renderer.js"></script>
+
+</body>
+</html>
