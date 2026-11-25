@@ -4,8 +4,8 @@
   "description": "Slot machine con probabilidad ponderada",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
-    "dev": "electron . --dev",
+    "start": "node scripts/launch-electron.js",
+    "dev": "node scripts/launch-electron.js --dev",
     "build": "npx electron-builder --win",
     "build:portable": "npx electron-builder --win portable",
     "sim": "node sim.js"

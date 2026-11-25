@@ -32,16 +32,48 @@
     <div class="particle"></div><div class="particle"></div><div class="particle"></div>
   </div>
 
-  <!-- ── Contenedor principal ─────────────────────────────────────────── -->
-  <main class="game-container" role="main">
+  <!-- ── LOBBY ────────────────────────────────────────────────────────── -->
+  <div id="screen-lobby" class="screen active-screen">
+    <div class="lobby-container">
+      <div>
+        <h1 class="lobby-title">🎰 CASIQUENO</h1>
+        <p class="rtp-sub">Elige tu juego</p>
+      </div>
+      <div class="lobby-cards">
+        <button class="game-card" data-game="tragamonedas">
+          <span class="game-card-icon">🎰</span>
+          <span class="game-card-title">Tragamonedas</span>
+          <span class="game-card-sub">RTP 85.08%</span>
+          <span class="game-card-balance" data-balance-for="tragamonedas">🪙 --</span>
+        </button>
+        <button class="game-card" data-game="blackjack">
+          <span class="game-card-icon">🃏</span>
+          <span class="game-card-title">Blackjack</span>
+          <span class="game-card-sub">Elige tu dealer</span>
+          <span class="game-card-balance" data-balance-for="blackjack">🪙 --</span>
+        </button>
+        <button class="game-card" data-game="roulette">
+          <span class="game-card-icon">🎡</span>
+          <span class="game-card-title">Ruleta</span>
+          <span class="game-card-sub">RTP 97.30%</span>
+          <span class="game-card-balance" data-balance-for="roulette">🪙 --</span>
+        </button>
+      </div>
+    </div>
+  </div>
 
-    <!-- Panel izquierdo: balance e historial -->
+  <!-- ── TRAGAMONEDAS ─────────────────────────────────────────────────── -->
+  <div id="screen-tragamonedas" class="screen">
+    <main class="game-container" role="main">
+
+    <!-- Panel izquierdo: volver, balance e historial -->
     <aside class="side-panel left-panel">
-      <section class="balance-section" aria-label="Balance del jugador">
-        <p class="panel-label">BALANCE</p>
+      <button class="back-to-lobby back-to-lobby-inline">← Lobby</button>
+      <section class="balance-section" aria-label="Fichas del jugador">
+        <p class="panel-label">FICHAS</p>
         <div class="balance-display">
-          <span class="balance-currency">$</span>
-          <span id="balance-value" class="balance-value">1.000</span>
+          <span class="balance-currency">🪙</span>
+          <span id="balance-value" class="balance-value">10.000</span>
         </div>
       </section>
 
@@ -117,25 +149,13 @@
 
       <!-- Controles de apuesta y botón girar -->
       <div class="controls-section">
-        <div class="bet-control" role="group" aria-label="Control de apuesta">
-          <button class="bet-btn" id="bet-dec" aria-label="Reducir apuesta">−</button>
+        <div class="chip-control" role="group" aria-label="Control de apuesta">
           <div class="bet-field">
             <span class="bet-label">APUESTA</span>
-            <div class="bet-input-wrap">
-              <span class="bet-currency">$</span>
-              <input
-                type="number"
-                id="bet-input"
-                class="bet-input"
-                value="10"
-                min="1"
-                max="100"
-                step="1"
-                aria-label="Monto de apuesta"
-              />
-            </div>
+            <div class="bet-amount-display" id="bet-amount-display">🪙 0</div>
           </div>
-          <button class="bet-btn" id="bet-inc" aria-label="Aumentar apuesta">+</button>
+          <div class="chip-row" id="chip-row" aria-label="Fichas disponibles"></div>
+          <button type="button" class="chip-clear-btn" id="bet-clear-btn" aria-label="Limpiar apuesta">Limpiar</button>
         </div>
 
         <button class="spin-btn" id="spin-btn" aria-label="Girar rodillos">
@@ -149,45 +169,15 @@
 
     <!-- Panel derecho: RTP y info -->
     <aside class="side-panel right-panel">
-      <section class="rtp-section" aria-label="Información de RTP">
+            <section class="rtp-section" aria-label="Información de RTP">
         <p class="panel-label">RTP TEÓRICO</p>
-        <div class="rtp-display">94.36%</div>
-        <p class="rtp-sub">House edge: 5.64%</p>
+        <div class="rtp-display" id="rtp-value">--</div>
+        <p class="rtp-sub" id="rtp-sub">House edge: --</p>
       </section>
 
       <section class="prizes-section" aria-label="Premios rápidos">
         <p class="panel-label">PREMIOS</p>
-        <div class="prize-list">
-          <div class="prize-item">
-            <span>🍒🍒🍒</span>
-            <span class="prize-mult">×5</span>
-          </div>
-          <div class="prize-item">
-            <span>🍋🍋🍋</span>
-            <span class="prize-mult">×7</span>
-          </div>
-          <div class="prize-item">
-            <span>🔔🔔🔔</span>
-            <span class="prize-mult">×12</span>
-          </div>
-          <div class="prize-item">
-            <span>⭐⭐⭐</span>
-            <span class="prize-mult">×25</span>
-          </div>
-          <div class="prize-item">
-            <span>💎💎💎</span>
-            <span class="prize-mult">×60</span>
-          </div>
-          <div class="prize-item highlight">
-            <span>7️⃣7️⃣7️⃣</span>
-            <span class="prize-mult jackpot">×120</span>
-          </div>
-          <div class="prize-divider"></div>
-          <div class="prize-item">
-            <span>Cualquier Par</span>
-            <span class="prize-mult">Varía</span>
-          </div>
-        </div>
+        <div class="prize-list" id="prize-list"></div>
       </section>
     </aside>
 
@@ -198,7 +188,7 @@
     <div class="win-overlay-content">
       <div class="win-confetti" aria-hidden="true">🎉</div>
       <h2 class="win-title">¡¡¡ JACKPOT !!!</h2>
-      <p class="win-amount">+$0</p>
+      <p class="win-amount">+🪙 0</p>
       <p class="win-sub">¡Felicitaciones!</p>
     </div>
   </div>
@@ -210,7 +200,7 @@
       <h2 class="game-over-title">Sin Balance</h2>
       <p class="game-over-sub">Te has quedado sin fondos</p>
       <button class="restart-btn" id="restart-btn">
-        🔄 Empezar de Nuevo ($1.000)
+        🔄 Empezar de Nuevo (🪙 10.000)
       </button>
     </div>
   </div>
@@ -225,9 +215,9 @@
 
       <div class="modal-body">
         <div class="rtp-info-box">
-          <strong>RTP Teórico: 94.36%</strong> · House edge: 5.64%
+          <strong>RTP Teórico: 85.08%</strong> · House edge: 14.92%
           <br/>
-          <small>Los pesos no son uniformes. Cada símbolo tiene una probabilidad distinta.</small>
+          <small>Los pesos no son uniformes. Las frutas comunes pagan un par muy chico (0.2×–0.4×, "casi gano") — el premio grande viene de los tríos, sobre todo de campana en adelante.</small>
         </div>
 
         <table class="paytable" aria-label="Probabilidades y pagos por símbolo">
@@ -251,7 +241,7 @@
             <li>❌ Cualquier otro resultado → sin premio</li>
           </ul>
           <p class="modal-rtp-calc">
-            <strong>Cálculo del RTP:</strong> Σ P(resultado) × pago = ~0.9436 por apuesta unitaria.<br/>
+            <strong>Cálculo del RTP:</strong> Σ P(resultado) × pago = ~0.8508 por apuesta unitaria.<br/>
             Verificable con <code>runSimulation(1_000_000)</code> en consola (npm run sim).
           </p>
         </div>
@@ -259,12 +249,148 @@
     </div>
   </div>
 
-  <!-- ── Scripts ──────────────────────────────────────────────────────── -->
-  <!-- Orden de carga importante: paytable → engine → animations → renderer -->
-  <script src="scripts/paytable.js"></script>
-  <script src="scripts/engine.js"></script>
-  <script src="scripts/animations.js"></script>
-  <script src="scripts/renderer.js"></script>
+    </main>
+  </div> <!-- cierra #screen-tragamonedas -->
 
+  <!-- ── BLACKJACK ───────────── -->
+  <div id="screen-blackjack" class="screen">
+    <button class="back-to-lobby">← Lobby</button>
+    <div class="bj-container">
+
+      <div class="fichas-badge" aria-label="Fichas del jugador">
+        <span class="fichas-badge-label">FICHAS</span>
+        <span class="fichas-badge-value">🪙 <span id="bj-balance-value">10.000</span></span>
+      </div>
+
+      <!-- Pantalla de configuración -->
+      <div id="bj-setup" class="bj-setup">
+        <h2 class="lobby-title" style="font-size:1.8rem;">🃏 Blackjack</h2>
+
+        <p class="panel-label">ELIGE TU DEALER</p>
+        <div id="bj-dealer-select" class="bj-dealer-cards"></div>
+  
+        <p class="panel-label">JUGADORES (mismo dispositivo)</p>
+        <div class="bet-control">
+          <button class="bet-btn" id="bj-players-dec">−</button>
+          <span id="bj-players-count" class="bet-value">1</span>
+          <button class="bet-btn" id="bj-players-inc">+</button>
+        </div>
+  
+        <button class="spin-btn" id="bj-start-btn">▶ Empezar</button>
+      </div>
+  
+      <!-- Mesa de juego -->
+      <div id="bj-table" class="bj-table hidden">
+        <div class="bj-dealer-area">
+          <p class="panel-label" id="bj-dealer-name">Dealer</p>
+          <div id="bj-dealer-hand" class="bj-hand"></div>
+          <p id="bj-dealer-total" class="bj-total"></p>
+        </div>
+  
+        <div id="bj-players-area" class="bj-players-area"></div>
+  
+        <div id="bj-result-message" class="result-message"></div>
+  
+        <div class="bj-controls">
+          <div class="chip-control" id="bj-bet-control">
+            <span class="bet-label">APUESTA (por jugador)</span>
+            <div class="bet-amount-display" id="bj-bet-amount-display">🪙 0</div>
+            <div class="chip-row" id="bj-chip-row" aria-label="Fichas disponibles"></div>
+            <button type="button" class="chip-clear-btn" id="bj-bet-clear-btn" aria-label="Limpiar apuesta">Limpiar</button>
+          </div>
+
+          <button class="spin-btn" id="bj-deal-btn">▶ Repartir</button>
+
+          <div id="bj-action-buttons" class="bj-action-buttons hidden">
+            <button class="bj-action-btn" id="bj-hit-btn">Pedir</button>
+            <button class="bj-action-btn" id="bj-stand-btn">Plantarse</button>
+            <button class="bj-action-btn" id="bj-double-btn">Doblar</button>
+            <button class="bj-action-btn" id="bj-split-btn">Dividir</button>
+          </div>
+
+          <button class="bj-end-btn" id="bj-end-btn">🔁 Terminar partida (cambiar dealer)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── RULETA ──────────────── -->
+  <div id="screen-roulette" class="screen">
+    <button class="back-to-lobby">← Lobby</button>
+    <div class="rl-container">
+      <h2 class="lobby-title" style="font-size:1.8rem;">🎡 Ruleta</h2>
+      <div class="fichas-badge" aria-label="Fichas del jugador">
+        <span class="fichas-badge-label">FICHAS</span>
+        <span class="fichas-badge-value">🪙 <span id="rl-balance-value">10.000</span></span>
+      </div>
+
+      <div class="rl-board">
+        <button class="rl-bet-btn rl-red" data-type="red">Rojo</button>
+        <button class="rl-bet-btn rl-black" data-type="black">Negro</button>
+        <button class="rl-bet-btn" data-type="even">Par</button>
+        <button class="rl-bet-btn" data-type="odd">Impar</button>
+        <button class="rl-bet-btn" data-type="low">1-18</button>
+        <button class="rl-bet-btn" data-type="high">19-36</button>
+        <button class="rl-bet-btn" data-type="dozen1">1ª Docena</button>
+        <button class="rl-bet-btn" data-type="dozen2">2ª Docena</button>
+        <button class="rl-bet-btn" data-type="dozen3">3ª Docena</button>
+        <button class="rl-bet-btn" data-type="column1">Columna 1</button>
+        <button class="rl-bet-btn" data-type="column2">Columna 2</button>
+        <button class="rl-bet-btn" data-type="column3">Columna 3</button>
+      </div>
+  
+      <div class="rl-straight">
+        <input type="number" id="rl-straight-number" min="0" max="36" placeholder="Nº pleno (0-36)" />
+        <button class="rl-bet-btn" id="rl-straight-btn">Apostar Pleno</button>
+      </div>
+  
+      <div class="chip-control">
+        <span class="bet-label">MONTO POR APUESTA</span>
+        <div class="bet-amount-display" id="rl-bet-amount-display">🪙 0</div>
+        <div class="chip-row" id="rl-chip-row" aria-label="Fichas disponibles"></div>
+        <button type="button" class="chip-clear-btn" id="rl-bet-clear-btn" aria-label="Limpiar monto">Limpiar</button>
+      </div>
+
+      <div id="rl-placed-bets" class="rl-placed-bets"></div>
+
+      <button class="spin-btn" id="rl-spin-btn">▶ GIRAR</button>
+
+      <div class="rl-wheel-display">
+        <div class="rl-wheel" id="rl-wheel" aria-hidden="true">
+          <div class="rl-wheel-disc" id="rl-wheel-disc"></div>
+          <div class="rl-wheel-ball-orbit" id="rl-wheel-ball-orbit">
+            <div class="rl-wheel-ball"></div>
+          </div>
+          <div class="rl-wheel-pointer"></div>
+        </div>
+        <div id="rl-ball1" class="rl-ball">–</div>
+      </div>
+
+      <div id="rl-result" class="result-message"></div>
+      <div id="rl-history" class="history-list"></div>
+    </div>
+
+    <!-- Overlay de pantalla completa: la rueda se traslada acá mientras gira -->
+    <div class="rl-wheel-fullscreen-overlay" id="rl-wheel-overlay" aria-hidden="true">
+      <div class="rl-wheel-overlay-slot" id="rl-wheel-overlay-slot"></div>
+    </div>
+  </div>
+
+  <!-- ── Scripts ──────────────────────────────────────────────────────── -->
+  <!-- Orden de carga importante: chips/wallet/router primero, luego cada juego -->
+  <script src="shared/chips.js"></script>
+  <script src="shared/wallet.js"></script>
+  <script src="shared/router.js"></script>
+  <script src="games/tragamonedas/paytable.js"></script>
+  <script src="games/tragamonedas/engine.js"></script>
+  <script src="games/tragamonedas/animations.js"></script>
+  <script src="games/tragamonedas/renderer.js"></script>
+
+  <script src="games/blackjack/engine.js"></script>
+  <script src="games/blackjack/dealers.js"></script>
+  <script src="games/blackjack/renderer.js"></script>
+
+  <script src="games/roulette/engine.js"></script>
+  <script src="games/roulette/renderer.js"></script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 // sim.js — Ejecutar simulación de RTP y mostrar resultados
-const { runSimulation } = require('./src/scripts/engine.js');
-const { calculateTheoreticalRTP } = require('./src/scripts/paytable.js');
+const { runSimulation } = require('./src/games/tragamonedas/engine.js');
+const { calculateTheoreticalRTP } = require('./src/games/tragamonedas/paytable.js');
 
 const iterations = 1_000_000;
 console.log(`\n=== SIMULACIÓN DE RTP — ${iterations.toLocaleString('es-ES')} tiradas ===\n`);

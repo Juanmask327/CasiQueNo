@@ -250,14 +250,18 @@ input {
   border-radius: var(--radius-md);
   padding: 12px;
   flex: 1;
+  min-height: 0;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .history-list {
   display: flex;
   flex-direction: column;
   gap: 5px;
-  max-height: 200px;
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
 }
 
@@ -1215,4 +1219,411 @@ input {
   padding: 1px 5px;
   font-size: 10px;
   color: var(--neon-green);
+}
+/* ─── Sistema de pantallas (router) ────────────────────────────────────── */
+.screen { display: none; }
+.screen.active-screen { display: block; }
+
+/* ─── Lobby ─────────────────────────────────────────────────────────────── */
+.lobby-container {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; height: 100vh; gap: 2rem;
+}
+.lobby-title { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; color: #ffffff; }
+.lobby-cards { display: flex; gap: 1.5rem; }
+.game-card {
+  display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+  padding: 2rem; min-width: 180px; background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
+  cursor: pointer; transition: transform 0.2s, border-color 0.2s;
+  /* Reset de estilos nativos del <button> */
+  font-family: inherit;
+  color: #ffffff;
+}
+.game-card:hover { transform: translateY(-4px); border-color: #f1c40f; }
+.game-card-icon { font-size: 3rem; }
+.game-card-title { font-weight: 700; color: #ffffff; }
+.game-card-sub { font-size: 0.85rem; color: rgba(255,255,255,0.6); }
+.game-card-balance {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ffd870;
+  background: rgba(240,184,64,0.12);
+  border: 1px solid rgba(240,184,64,0.3);
+  border-radius: 999px;
+  padding: 3px 10px;
+  margin-top: 0.3rem;
+}
+.back-to-lobby {
+  position: absolute; top: 60px; left: 20px; z-index: 10;
+  background: none; border: 1px solid rgba(255,255,255,0.2);
+  color: #fff; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer;
+}
+
+/* En tragamonedas el panel izquierdo empieza muy cerca del top: un botón
+   absoluto ahí se superpone con el panel de fichas/historial. En vez de
+   flotar, se vuelve el primer elemento del panel (en flujo normal). */
+.back-to-lobby-inline {
+  position: static;
+  align-self: flex-start;
+  width: auto;
+  flex-shrink: 0;
+}
+/* ─── Blackjack ─────────────────────────────────────────────────────────── */
+.hidden { display: none !important; }
+
+.bj-container { max-width: 900px; margin: 80px auto 0; padding: 0 20px; color: #fff; }
+.bj-setup { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+.bj-dealer-cards { display: flex; gap: 1rem; margin-bottom: 1rem; }
+.bj-dealer-card {
+  padding: 1rem 1.2rem; border: 2px solid rgba(255,255,255,0.15); border-radius: 10px;
+  cursor: pointer; text-align: center; min-width: 140px; color: #fff;
+  background: rgba(255,255,255,0.03);
+}
+.bj-dealer-card.selected { border-color: #f1c40f; background: rgba(241,196,15,0.1); }
+.bj-dealer-card .bj-dealer-title { font-weight: 700; margin-bottom: 0.3rem; }
+.bj-dealer-card .bj-dealer-flavor { font-size: 0.75rem; opacity: 0.7; }
+.bj-dealer-card .bj-dealer-stats { font-size: 0.7rem; color: #f1c40f; margin-top: 0.4rem; }
+
+.bj-table { display: flex; flex-direction: column; gap: 1.5rem; align-items: center; }
+.bj-dealer-area { text-align: center; }
+.bj-hand { display: flex; gap: 0.4rem; justify-content: center; margin: 0.5rem 0; flex-wrap: wrap; }
+.bj-card {
+  width: 46px; height: 64px; border-radius: 6px; background: #fff; color: #111;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 1rem; box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+}
+.bj-card.red-suit { color: #e74c3c; }
+.bj-card.back { background: linear-gradient(135deg,#2c3e50,#34495e); color: transparent; }
+.bj-total { font-size: 0.85rem; opacity: 0.8; }
+
+.bj-players-area { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
+.bj-player-box {
+  border: 2px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 0.8rem 1rem;
+  min-width: 160px; text-align: center;
+}
+.bj-player-box.active-turn { border-color: #f1c40f; }
+.bj-player-box.player-result-win { border-color: #2ecc71; }
+.bj-player-box.player-result-lose { border-color: #e74c3c; }
+.bj-player-box .bj-player-title { font-weight: 700; margin-bottom: 0.3rem; }
+.bj-player-box .bj-player-result { font-size: 0.8rem; margin-top: 0.3rem; }
+
+.bj-controls { display: flex; flex-direction: column; align-items: center; gap: 0.8rem; }
+.bj-action-buttons { display: flex; gap: 0.6rem; }
+.bj-action-btn {
+  padding: 0.6rem 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.05); color: #fff; cursor: pointer; font-weight: 600;
+}
+.bj-action-btn:hover { background: rgba(241,196,15,0.15); border-color: #f1c40f; }
+.bj-action-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+/* ─── Roulette ──────────────────────────────────────────────────────────── */
+.rl-container { max-width: 700px; margin: 42px auto 0; padding: 0 20px; color: #fff; text-align: center; }
+.rl-board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin: 1rem 0; }
+.rl-bet-btn {
+  padding: 0.7rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.05); color: #fff; cursor: pointer; font-weight: 600;
+}
+.rl-bet-btn:hover { border-color: #f1c40f; }
+.rl-bet-btn.rl-red { background: rgba(231,76,60,0.25); }
+.rl-bet-btn.rl-black { background: rgba(0,0,0,0.4); }
+.rl-straight { display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 1rem; }
+.rl-straight input {
+  width: 140px; padding: 0.5rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.05); color: #fff;
+}
+.rl-placed-bets { margin: 1rem 0; min-height: 30px; font-size: 0.85rem; opacity: 0.85; }
+.rl-placed-bets .rl-chip {
+  display: inline-block; margin: 0.2rem; padding: 0.3rem 0.6rem; border-radius: 20px;
+  background: rgba(241,196,15,0.15); border: 1px solid #f1c40f; cursor: pointer;
+}
+@keyframes dealCard {
+  from { opacity: 0; transform: translateY(-40px) rotate(-8deg) scale(0.7); }
+  to   { opacity: 1; transform: translateY(0) rotate(0) scale(1); }
+}
+.bj-card {
+  animation: dealCard 0.35s ease-out backwards;
+}
+
+.rl-wheel-display { display: flex; gap: 1.2rem; justify-content: center; align-items: center; margin: 0.8rem 0; }
+.rl-ball {
+  width: 90px; height: 90px; border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-size: 2rem; font-weight: 800; color: #fff;
+  background: radial-gradient(circle at 35% 30%, #2c3e50, #0d0d1a);
+  border: 3px solid rgba(255,255,255,0.15); transition: border-color 0.3s;
+}
+.rl-ball.spinning { animation: ballSpin 0.15s linear infinite; }
+.rl-ball.result-red    { border-color: #e74c3c; background: radial-gradient(circle at 35% 30%, #e74c3c, #7b241c); }
+.rl-ball.result-black  { border-color: #444; background: radial-gradient(circle at 35% 30%, #333, #000); }
+.rl-ball.result-green  { border-color: #2ecc71; background: radial-gradient(circle at 35% 30%, #2ecc71, #145a32); }
+.rl-ball.settled { animation: ballSettle 0.4s ease-out; }
+
+@keyframes ballSpin {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(0.92); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+@keyframes ballSettle {
+  0% { transform: scale(1.3); }
+  60% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FICHAS — control de apuesta a base de fichas clicables (los 3 juegos)
+   ═══════════════════════════════════════════════════════════════════════════ */
+.chip-control {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  width: 100%;
+  max-width: 340px;
+}
+
+.bet-amount-display {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--gold-light);
+  text-shadow: 0 0 12px rgba(255,216,112,0.4);
+}
+
+.chip-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.chip-row.disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.chip-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  color: #fff;
+  border: 3px dashed rgba(255,255,255,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 3px 0 rgba(0,0,0,0.35), 0 5px 12px rgba(0,0,0,0.45);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.chip-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 0 rgba(0,0,0,0.35), 0 8px 16px rgba(0,0,0,0.5);
+}
+
+.chip-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 0 rgba(0,0,0,0.35), 0 3px 8px rgba(0,0,0,0.4);
+}
+
+.chip-500  { background: radial-gradient(circle at 32% 28%, #5b9bff, #1c4e9e); }
+.chip-1000 { background: radial-gradient(circle at 32% 28%, #4fe0a0, #1c7a52); }
+.chip-1500 { background: radial-gradient(circle at 32% 28%, #c48bff, #6a3aa8); }
+.chip-2000 { background: radial-gradient(circle at 32% 28%, #ff6b74, #a11d28); }
+
+.chip-clear-btn {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  padding: 6px 16px;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.chip-clear-btn:hover {
+  border-color: var(--neon-red);
+  color: var(--neon-red);
+}
+
+/* Insignia de fichas para blackjack/ruleta (tragamonedas ya tiene su propio panel) —
+   siempre visible, tanto en la pantalla de configuración como en la mesa de juego. */
+.fichas-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: fit-content;
+  margin: 0 auto 0.8rem;
+  background: rgba(240,184,64,0.1);
+  border: 1px solid rgba(240,184,64,0.3);
+  border-radius: var(--radius-sm);
+  padding: 8px 20px;
+  box-shadow: 0 0 16px rgba(240,184,64,0.08);
+}
+
+.fichas-badge-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+}
+
+.fichas-badge-value {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gold-light);
+  text-shadow: 0 0 10px rgba(255,216,112,0.4);
+}
+
+/* ─── Blackjack: terminar partida / cambiar dealer ─────────────────────── */
+.bj-end-btn {
+  margin-top: 0.2rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255,82,82,0.35);
+  background: rgba(255,82,82,0.08);
+  color: #ff8080;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all var(--transition-fast);
+}
+
+.bj-end-btn:hover {
+  background: rgba(255,82,82,0.18);
+  border-color: var(--neon-red);
+}
+
+/* ─── Ruleta: rueda animada (una sola bola) ─────────────────────────────── */
+.rl-wheel {
+  position: relative;
+  width: 190px;
+  height: 190px;
+  flex-shrink: 0;
+}
+
+.rl-wheel-disc {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 4px solid var(--gold);
+  box-shadow: 0 0 20px rgba(240,184,64,0.3), inset 0 0 24px rgba(0,0,0,0.7);
+  transition: transform 4.5s cubic-bezier(0.12, 0.7, 0.15, 1);
+}
+
+.rl-wheel-number {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Centrado sobre el punto exacto (rotar + empujar al radio) en vez de
+   quedar "pegado" desde una esquina — así no se monta con el número vecino. */
+.rl-wheel-number-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  white-space: nowrap;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.95), 0 0 4px rgba(0,0,0,0.9);
+}
+
+.rl-wheel-ball-orbit {
+  position: absolute;
+  inset: 0;
+  transition: transform 4.5s cubic-bezier(0.12, 0.7, 0.15, 1);
+}
+
+.rl-wheel-ball {
+  position: absolute;
+  top: 7px;
+  left: 50%;
+  width: 11px;
+  height: 11px;
+  margin-left: -5.5px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff, #ccc);
+  box-shadow: 0 0 6px rgba(255,255,255,0.9);
+}
+
+.rl-wheel-pointer {
+  position: absolute;
+  top: -7px;
+  left: 50%;
+  margin-left: -7px;
+  width: 0;
+  height: 0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 12px solid var(--gold);
+  z-index: 5;
+}
+
+/* Overlay de pantalla completa: la rueda se agranda acá mientras gira,
+   con una transición suave de opacidad para "aparecer" en grande. */
+.rl-wheel-fullscreen-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.88);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 500ms ease;
+}
+
+.rl-wheel-fullscreen-overlay.visible {
+  opacity: 1;
+}
+
+.rl-wheel-overlay-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Modificador aplicado a #rl-wheel mientras vive dentro del overlay */
+.rl-wheel.rl-wheel--big {
+  width: min(62vmin, 480px);
+  height: min(62vmin, 480px);
+}
+
+.rl-wheel--big .rl-wheel-number-text { font-size: 19px; }
+
+.rl-wheel--big .rl-wheel-ball {
+  top: 16px;
+  width: 22px;
+  height: 22px;
+  margin-left: -11px;
+}
+
+.rl-wheel--big .rl-wheel-pointer {
+  top: -16px;
+  margin-left: -16px;
+  border-left-width: 16px;
+  border-right-width: 16px;
+  border-top-width: 26px;
 }
